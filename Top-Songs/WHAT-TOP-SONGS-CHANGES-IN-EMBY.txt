@@ -1,0 +1,49 @@
+WHAT TOP SONGS CHANGES IN EMBY
+==============================
+
+Top Songs is one file, TopSongs.dll, in Emby's plugins folder. To add the
+"Top Songs >" link next to "Songs >" on artist pages, Emby's web app has to load
+its script. Emby has no setting for that, so Top Songs adds three marked lines
+to one Emby file:
+
+    <Emby>\system\dashboard-ui\index.html
+    (usually %APPDATA%\Emby-Server\system\dashboard-ui\index.html)
+
+THE COMPLETE BLOCK (just before </body>)
+----------------------------------------
+
+<!-- BEGIN TOPSONGS LOADER -->
+<script src="../emby/TopSongs/Bootstrap" defer></script>
+<!-- END TOPSONGS LOADER -->
+
+It asks the Emby server for the Top Songs script, which is stored inside
+TopSongs.dll. No other file is changed, nothing outside the markers is touched,
+and nothing is downloaded from the internet. Emby's phone, TV and desktop apps
+don't use this file.
+
+WHEN IT IS ADDED AND REMOVED
+----------------------------
+
+- Added when Emby starts, only if it is missing (first install, or after an
+  Emby update replaced the web files). Otherwise the file is left untouched.
+- Kept through normal restarts and Top Songs updates.
+- Removed when you uninstall Top Songs from Emby's Plugins page.
+
+The file is written safely (a temporary copy is swapped in), and Top Songs
+takes turns with other plugins that edit it, such as Radio Meta, using a shared
+lock (Global\EmbyDashboardIndexWrite).
+
+AFTER FIRST INSTALL
+-------------------
+
+A browser that had Emby open before may keep using its saved copy of the page.
+Press Ctrl+F5 once in that browser (Cmd+Shift+R on a Mac). Diagnostics on the
+Top Songs settings page shows if a browser still needs this.
+
+REMOVING IT BY HAND
+-------------------
+
+If TopSongs.dll is deleted instead of uninstalled, the block stays until the
+next Emby update. It does nothing visible (one line in the browser's developer
+console). To remove it anyway: stop Emby, delete the three lines above from
+dashboard-ui\index.html, save, and start Emby.

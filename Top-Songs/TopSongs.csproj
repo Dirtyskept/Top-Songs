@@ -1,0 +1,36 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <AssemblyName>TopSongs</AssemblyName>
+    <RootNamespace>TopSongs</RootNamespace>
+    <AssemblyVersion>1.2.1.0</AssemblyVersion>
+    <FileVersion>1.2.1.0</FileVersion>
+    <EmbySystemDir Condition="'$(EmbySystemDir)' == ''">$(APPDATA)\Emby-Server\system</EmbySystemDir>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="MediaBrowser.Common">
+      <HintPath>$(EmbySystemDir)\MediaBrowser.Common.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="MediaBrowser.Controller">
+      <HintPath>$(EmbySystemDir)\MediaBrowser.Controller.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="MediaBrowser.Model">
+      <HintPath>$(EmbySystemDir)\MediaBrowser.Model.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="configPage.html" LogicalName="TopSongs.Web.configPage.html" />
+    <EmbeddedResource Include="configPage.js" LogicalName="TopSongs.Web.configPage.js" />
+    <EmbeddedResource Include="TopSongsArtistPage.js" LogicalName="TopSongs.Web.TopSongsArtistPage.js" />
+    <EmbeddedResource Include="TopSongsItemPageLoader.js" LogicalName="TopSongs.Web.TopSongsItemPageLoader.js" />
+    <EmbeddedResource Include="Images/plugin.png" LogicalName="TopSongs.Images.plugin.png" />
+  </ItemGroup>
+</Project>

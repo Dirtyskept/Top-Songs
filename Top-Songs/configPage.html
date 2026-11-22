@@ -1,0 +1,75 @@
+<div id="topSongsConfigPage" data-role="page" class="page type-interior pluginConfigurationPage" data-require="emby-button,emby-input" data-controller="__plugin/configPageJS">
+  <style>
+    #topSongsConfigPage { max-width: 900px; margin: 0 auto; padding: 1.5em; }
+    #topSongsConfigPage h1 { font-size: 1.45em; font-weight: 500; margin: 0 0 .5em; }
+    #topSongsConfigPage h2 { font-size: 1.1em; font-weight: 600; margin: 1.5em 0 .55em; }
+    #topSongsConfigPage p { line-height: 1.5; }
+    #topSongsConfigPage label { display: block; margin: 1.1em 0 .45em; font-weight: 600; }
+    #topSongsConfigPage input { box-sizing: border-box; width: 100%; max-width: 560px; }
+    #topSongsConfigPage .help { max-width: 760px; opacity: .82; }
+    #topSongsConfigPage #status { min-height: 1.4em; margin-top: 1em; }
+    #topSongsConfigPage #status.good, #topSongsConfigPage #debugSummary.good { color: var(--theme-success-color, #4caf50); }
+    #topSongsConfigPage #status.bad, #topSongsConfigPage #debugSummary.bad { color: var(--theme-error-color, #e57373); }
+    #topSongsConfigPage .saveButton { margin-top: 1.5em; }
+    #topSongsConfigPage #diagnostics { margin-top: 2.2em; border-top: 1px solid var(--theme-line-color, rgba(127,127,127,.4)); padding-top: 1em; }
+    #topSongsConfigPage #diagnostics summary { cursor: pointer; font-weight: 600; }
+    #topSongsConfigPage .debugButtons { display: flex; flex-wrap: wrap; gap: .55em; margin: .8em 0; }
+    #topSongsConfigPage .debugButtons .emby-button { margin: 0; }
+    #topSongsConfigPage button[hidden] { display: none !important; }
+    #topSongsConfigPage #debugSummary { margin: .8em 0; font-weight: 600; }
+    #topSongsConfigPage .diagnostic-checks { display: flex; flex-direction: column; gap: .45em; margin: .8em 0 1em; }
+    #topSongsConfigPage .diagnostic-check { display: grid; grid-template-columns: 66px minmax(150px, .8fr) minmax(180px, 2fr); align-items: start; gap: .65em; padding: .7em .75em; border: 1px solid var(--theme-line-color, rgba(127,127,127,.25)); border-radius: 5px; }
+    #topSongsConfigPage .diagnostic-state { font-weight: 700; font-size: .88em; }
+    #topSongsConfigPage .diagnostic-state.pass { color: var(--theme-success-color, #48a868); }
+    #topSongsConfigPage .diagnostic-state.warn { color: #c58a26; }
+    #topSongsConfigPage .diagnostic-state.fail { color: var(--theme-error-color, #d9534f); }
+    #topSongsConfigPage .diagnostic-state.info { opacity: .75; }
+    #topSongsConfigPage .diagnostic-detail { overflow-wrap: anywhere; opacity: .9; }
+    #topSongsConfigPage #debugOutput { box-sizing: border-box; white-space: pre-wrap; overflow-wrap: anywhere; padding: 1em; border: 1px solid var(--theme-line-color, rgba(127,127,127,.4)); border-radius: 4px; max-width: 100%; max-height: 36em; overflow: auto; font-family: monospace; font-size: .88em; background: rgba(127,127,127,.06); }
+    #topSongsConfigPage #debugResults[hidden], #topSongsConfigPage #debugOutput[hidden] { display: none; }
+    #topSongsConfigPage #fullReport { margin-top: 1em; }
+    #topSongsConfigPage #fullReport summary { cursor: pointer; opacity: .85; }
+    @media (max-width: 650px) {
+      #topSongsConfigPage .diagnostic-check { grid-template-columns: 58px minmax(0, 1fr); gap: .35em .6em; }
+      #topSongsConfigPage .diagnostic-detail { grid-column: 2; }
+    }
+  </style>
+  <div data-role="content">
+    <h1>Top Songs settings</h1>
+    <p>Shows an artist’s popular Last.fm tracks that are available in your Emby library.</p>
+
+    <h2>Last.fm</h2>
+    <p class="help">Create a <a href="https://www.last.fm/api/account/create" target="_blank" rel="noopener noreferrer">Last.fm API account</a> and paste its API key below (not the shared secret). Public charts do not require a Last.fm login.</p>
+    <label for="lastFmApiKey">API key</label>
+    <input id="lastFmApiKey" class="emby-input" type="password" autocomplete="off" spellcheck="false" placeholder="Paste your Last.fm API key">
+
+    <h2>Display</h2>
+    <label for="cacheSongsPerArtist">Songs per artist</label>
+    <input id="cacheSongsPerArtist" class="emby-input" type="number" min="1" max="50" step="1" value="10">
+    <p class="help">How many matched songs the Top Songs list shows (1–50). On artist pages, click <strong>Top Songs &gt;</strong> next to <strong>Songs &gt;</strong> to open it.</p>
+
+    <button id="save" is="emby-button" class="raised button-submit emby-button saveButton" type="button"><span>Save settings</span></button>
+    <div id="status" role="status" aria-live="polite"></div>
+
+    <details id="diagnostics">
+      <summary>Troubleshooting (optional)</summary>
+      <p class="help">If Top Songs is missing, run diagnostics and share the report with the artist name. Your API key is not included.</p>
+      <p class="help"><strong>Nothing showing after installing?</strong> Press <strong>Ctrl+F5</strong> once in each browser that had Emby open before (Cmd+Shift+R on a Mac).</p>
+      <p class="help">Top Songs adds one marked block to Emby's <code>dashboard-ui\index.html</code> to load its script. Uninstalling Top Songs removes it.</p>
+      <label for="testArtist">Artist to check (optional)</label>
+      <input id="testArtist" class="emby-input" type="text" autocomplete="off" spellcheck="false" placeholder="For example, ZZ Top">
+      <div class="debugButtons">
+        <button id="runDiagnostics" is="emby-button" class="raised emby-button" type="button"><span>Run diagnostics</span></button>
+        <button id="copyDiagnostics" is="emby-button" class="raised emby-button" type="button" hidden disabled><span>Copy report</span></button>
+      </div>
+      <div id="debugSummary" role="status" aria-live="polite">Diagnostics have not run.</div>
+      <div id="debugResults" hidden>
+        <div id="diagnosticChecks" class="diagnostic-checks" aria-live="polite"></div>
+        <details id="fullReport">
+          <summary>Full text report</summary>
+          <pre id="debugOutput" aria-label="Full diagnostic report" tabindex="0"></pre>
+        </details>
+      </div>
+    </details>
+  </div>
+</div>
