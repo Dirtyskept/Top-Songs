@@ -19,3 +19,8 @@ To show the link, Emby's web app has to load Top Songs' script. So Top Songs add
 
 ## Build
 `dotnet build TopSongs.csproj -c Release -p:EmbySystemDir=<folder with MediaBrowser.Common, Controller and Model.dll>`, then use `bin/Release/net8.0/TopSongs.dll`.
+
+## Licence
+Copyright (C) 2026 Dirtyskept. Top Songs is free software under the [GNU General Public License, version 3](LICENSE): you may use, change and share it, and a changed version you share must also be under GPL-3.0. It comes with no warranty.
+
+Song charts come from [Last.fm](https://www.last.fm); Top Songs isn't made or endorsed by Last.fm.
