@@ -1,0 +1,11 @@
+# Build output and local caches
+bin/
+obj/
+.vs/
+*.user
+*.suo
+*.log
+
+# Emby's own DLLs and build symbols: never commit or package them
+*.dll
+*.pdb
